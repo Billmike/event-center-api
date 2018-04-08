@@ -48,4 +48,5 @@ module.exports = (sequelize, DataTypes) => {
       as: 'events'
     });
   };
+  return Center;
 };

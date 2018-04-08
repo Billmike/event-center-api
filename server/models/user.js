@@ -29,4 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       as: 'events'
     });
   };
+
+  return User;
 };
