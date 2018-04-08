@@ -2,8 +2,9 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import db from '../models';
 import validateSignup from '../validators/validateSignup';
+import validateSignin from '../validators/validateSignin';
 
-const User = db.User;
+const { User } = db;
 
 class Users {
   static userSignup(request, response) {
@@ -16,7 +17,7 @@ class Users {
         email: request.body.email
       }
     })
-      .then(existingUser => {
+      .then((existingUser) => {
         if (existingUser) {
           return response.status(409).json({
             message: 'This email is already taken.'
@@ -28,7 +29,7 @@ class Users {
           email: request.body.email,
           password: hashedPassword
         })
-          .then(newUser => {
+          .then((newUser) => {
             const userToken = jwt.sign(
               {
                 id: newUser.id,
@@ -44,7 +45,7 @@ class Users {
               token: userToken
             });
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.errors[0].message === 'username must be unique') {
               return response.status(409).json({
                 message: 'This username is already taken'
@@ -52,12 +53,53 @@ class Users {
             }
           });
       })
-      .catch(error => {
+      .catch((error) => {
         return response.status(500).json({
           message:
             'Something went wrong! We are currently working on resolving this issue.'
         });
       });
+  }
+
+  static userSignin (request, response) {
+    const { errors, isValid } = validateSignin(request.body);
+    if (!isValid) {
+      return response.status(400).json(errors);
+    }
+    const { email, password } = request.body;
+    User.findOne({
+      where: { email }
+    }).then((user) => {
+      if (!user) {
+        return response.status(400).json({
+          message: 'Invalid email or password.'
+        });
+      }
+      const unhashedPassword = bcrypt.compareSync(password, user.password);
+      if (!unhashedPassword) {
+        return response.status(400).json({
+          message: 'Invalid email or password.'
+        });
+      }
+      const userToken = jwt.sign(
+        {
+          id: user.id,
+          username: user.username
+        },
+        process.env.SECRET,
+        { expiresIn: '10h' }
+      );
+      response.status(201).json({
+        message: 'Signin successful.',
+        email: user.email,
+        username: user.username,
+        token: userToken
+      });
+    }).catch(() => {
+      return response.status(500).json({
+        message: 'Something went wrong! We are currently working on resolving this issue.'
+      });
+    });
   }
 }
 
