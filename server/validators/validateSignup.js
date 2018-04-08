@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 
 const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-const validateSignup = userData => {
+const validateSignup = (userData) => {
   const errors = {};
   if (
     (userData.username === undefined || userData.username.trim() === '') &&
