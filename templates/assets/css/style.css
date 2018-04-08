@@ -1,0 +1,27 @@
+body {
+  color: #333;
+  font-family: 100% Helvetica, sans-serif; }
+
+a:hover {
+  color: white; }
+
+.active {
+  background: grey;
+  border-radius: 10px;
+  color: white;
+  opacity: 0.5; }
+
+.auth {
+  background: #d87093;
+  border-radius: 10px;
+  color: white; }
+
+.div-image {
+  background-image: url("./assets/images/events-1.jpg");
+  background-position: 0 0;
+  background-repeat: no-repeat; }
+
+.nav-item {
+  margin-top: 10px; }
+
+/*# sourceMappingURL=style.css.map */

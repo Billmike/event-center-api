@@ -1,0 +1,43 @@
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+$link-color: grey;
+$active-color: white;
+// $image-path: './assets/images/events-1.jpg';
+
+@mixin background($image-path, $position: 0 0, $repeat: no-repeat) {
+  background: {
+    image: url($image-path);
+    position: $position;
+    repeat: $repeat;
+  }
+}
+
+body {
+  color: $primary-color;
+  font-family: 100% $font-stack;
+}
+
+a:hover {
+  color: $active-color;
+}
+
+.active {
+  background: $link-color;
+  border-radius: 10px;
+  color: $active-color;
+  opacity: 0.5;
+}
+
+.auth {
+  background: #d87093;
+  border-radius: 10px;
+  color: $active-color;
+}
+
+.div-image {
+  @include background('./assets/images/events-1.jpg');
+}
+
+.nav-item {
+  margin-top: 10px;
+}
