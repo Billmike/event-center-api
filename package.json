@@ -6,6 +6,7 @@
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "bcrypt": "^2.0.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "cross-env": "^5.1.4",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
@@ -31,7 +33,9 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node ./server/bin/www.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed-test-db": "sequelize db:seed:all --env test",
+    "test": "npm run drop-test-db && npm run seed-test-db && cross-env NODE_ENV=test mocha --compilers js:babel-core/register server/tests/user.test.js --timeout 50000 --exit",
+    "drop-test-db": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test"
   },
   "keywords": [],
   "author": "",
