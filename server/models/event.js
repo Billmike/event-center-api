@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.TEXT
     },
+    image: {
+      defaultValue: 'https://pieceloveandchocolate.com/product/plc-dairy-freevegan-chocoholics-delight-gift-basket',
+      type: DataTypes.TEXT
+    },
     date: {
       allowNull: false,
       type: DataTypes.DATE
@@ -11,9 +15,13 @@ module.exports = (sequelize, DataTypes) => {
     duration: {
       allowNull: false,
       type: DataTypes.INTEGER
+    },
+    venue: {
+      allowNull: false,
+      type: DataTypes.STRING
     }
   });
-  Event.associate = models => {
+  Event.associate = (models) => {
     Event.belongsTo(models.Center, {
       foreignKey: 'venue',
       onDelete: 'CASCADE'

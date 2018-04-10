@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     }
   });
-  Center.associate = models => {
+  Center.associate = (models) => {
     Center.belongsTo(models.User, {
       foreignKey: 'owner'
     });

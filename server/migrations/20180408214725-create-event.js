@@ -12,6 +12,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      image: {
+        defaultValue: 'https://pieceloveandchocolate.com/product/plc-dairy-freevegan-chocoholics-delight-gift-basket',
+        type: Sequelize.TEXT
+      },
       date: {
         allowNull: false,
         type: Sequelize.DATE
@@ -36,16 +40,6 @@ module.exports = {
           model: 'Users',
           key: 'id',
           as: 'organizer'
-        }
-      },
-      venue: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        onDelete: 'cascade',
-        references: {
-          model: 'Centers',
-          key: 'id',
-          as: 'venue'
         }
       }
     });
