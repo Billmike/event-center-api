@@ -61,7 +61,7 @@ class Users {
       });
   }
 
-  static userSignin (request, response) {
+  static userSignin(request, response) {
     const { errors, isValid } = validateSignin(request.body);
     if (!isValid) {
       return response.status(400).json(errors);

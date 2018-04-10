@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   });
-  User.associate = models => {
+  User.associate = (models) => {
     User.hasMany(models.Center, {
       foreignKey: 'owner',
       as: 'centers'
