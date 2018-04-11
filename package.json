@@ -23,20 +23,30 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
     "cross-env": "^5.1.4",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "mocha": "^5.0.5",
+    "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^1.17.3",
+    "nyc": "^11.6.0",
     "supertest": "^3.0.0"
   },
   "scripts": {
     "start": "nodemon --exec babel-node ./server/bin/www.js",
     "seed-test-db": "sequelize db:seed:all --env test",
-    "test": "npm run drop-test-db && npm run seed-test-db && cross-env NODE_ENV=test mocha --compilers js:babel-core/register server/tests/index.js --timeout 50000 --exit",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "report": "nyc report",
+    "test": "npm run drop-test-db && npm run seed-test-db && cross-env NODE_ENV=test nyc mocha --compilers js:babel-core/register server/tests/index.js --timeout 50000 --exit && npm run report",
     "drop-test-db": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test"
+  },
+  "nyc": {
+    "require": [
+      "babel-register"
+    ]
   },
   "keywords": [],
   "author": "",

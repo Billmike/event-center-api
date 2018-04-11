@@ -1,0 +1,19 @@
+language: node_js
+node_js: 
+   -  "8.9.1"
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database event_center_test;' -U postgres
+install:
+  - npm install sequelize
+  - npm install cross-env
+  - npm install sequelize-cli
+  - npm install pg
+  - npm install pg-hstore
+  - npm install nyc
+script:
+  - npm run test
+
+after_success:
+  - npm run coverage
