@@ -176,4 +176,20 @@ describe('Tests for Centers endpoint', () => {
       }
     );
   });
+  describe('Edit center endpoint', () => {
+    it('should throw an error if the user is not an admin', (done) => {
+      request.put(`${centerApi}/${centerSeed.id}?token=${dummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(centerSeed)
+        .end((error, response) => {
+          expect(response.status).to.equal(401);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message)
+            .to.equal('You need admin priviledges to access this resource');
+          done();
+        });
+    });
+  });
 });
