@@ -10,5 +10,12 @@ module.exports = (app) => {
 
   app.post('/api/v1/users/signup', userController.userSignup);
   app.post('/api/v1/users/signin', userController.userSignin);
-  app.post('/api/v1/centers', sessionControl.isLoggedIn, sessionControl.isUser, centerController.createCenter);
+  app.post(
+    '/api/v1/centers', sessionControl.isLoggedIn,
+    sessionControl.isUser, centerController.createCenter
+  );
+  app.put(
+    '/api/v1/centers/:centerId', sessionControl.isLoggedIn,
+    sessionControl.isUser, centerController.editCenter
+  );
 };

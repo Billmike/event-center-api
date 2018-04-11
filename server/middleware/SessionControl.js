@@ -5,9 +5,6 @@ import serverError from '../errorHandler/serverError';
 const { User } = db;
 
 class SessionControl {
-  static isAdmin(request, response, next) {
-
-  }
   static isLoggedIn(request, response, next) {
     request.token = request.headers['x-access-token']
     || request.query.token || request.headers.token;

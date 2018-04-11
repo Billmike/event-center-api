@@ -6,7 +6,6 @@ const { Center } = db;
 
 class CenterController {
   static createCenter(request, response) {
-
     const { errors, isValid } = validateInput(request.body);
 
     if (!isValid) {
@@ -44,6 +43,41 @@ class CenterController {
         message: error.message
       });
     });
+  }
+
+  static editCenter(request, response) {
+    return Center.findById(request.params.centerId)
+      .then((center) => {
+        if (!center) {
+          return response.status(404).json({
+            message: 'Center not found.'
+          });
+        } else if (request.userDetails.username !== 'adminuser') {
+          return response.status(401).json({
+            message: 'You need admin priviledges to access this resource'
+          });
+        }
+        return center.update({
+          name: request.body.name || center.name,
+          description: request.body.description || center.description,
+          image: request.body.image || center.image,
+          state: request.body.state || center.state,
+          location: request.body.location || center.location,
+          capacity: request.body.capacity || center.capacity,
+          equipments: request.body.equipments || center.equipments,
+          availability: request.body.availability || center.availability,
+          price: request.body.price || center.price
+        }).then(() => {
+          return response.status(201).json({
+            message: 'Center details updated successfully',
+            centerDetails: center
+          });
+        });
+      }).catch((error) => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
   }
 }
 

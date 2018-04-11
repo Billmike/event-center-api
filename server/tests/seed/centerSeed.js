@@ -1,4 +1,5 @@
 const centerSeed = {
+  id: '1',
   name: 'Staples Center',
   description: 'LA\'s finest basketball center',
   state: 'Los Angeles',
