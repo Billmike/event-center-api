@@ -5,15 +5,6 @@ const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const validateSignup = (userData) => {
   const errors = {};
   if (
-    (userData.username === undefined || userData.username.trim() === '') &&
-    (userData.email === undefined ||
-      userData.email.trim() === '' ||
-      !validateEmail.test(userData.email)) &&
-    (userData.password === undefined || userData.password.trim() === '')
-  ) {
-    errors.requiredFields = 'All fields are required.';
-  }
-  if (
     userData.username === undefined ||
     userData.username.trim() === '' ||
     userData.username.length <= 5

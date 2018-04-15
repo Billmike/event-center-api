@@ -18,4 +18,9 @@ module.exports = (app) => {
     '/api/v1/centers/:centerId', sessionControl.isLoggedIn,
     sessionControl.isUser, centerController.editCenter
   );
+  app.delete(
+    '/api/v1/center/:centerId', sessionControl.isLoggedIn,
+    sessionControl.isUser, centerController.deleteCenter
+  );
+  app.get('/api/v1/centers', centerController.getCenters);
 };
