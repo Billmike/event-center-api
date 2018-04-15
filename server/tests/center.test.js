@@ -6,6 +6,7 @@ import dummyUser, { adminUser } from './seed/userseed';
 
 const request = supertest(app);
 const centerApi = '/api/v1/centers';
+const deleteCenter = '/api/v1/center';
 
 describe('Tests for Centers endpoint', () => {
   describe('Test create center endpoint', () => {
@@ -191,5 +192,79 @@ describe('Tests for Centers endpoint', () => {
           done();
         });
     });
+    it('should throw an error if the center to be edited does not exist', (done) => {
+      request.put(`${centerApi}/400?token=${adminUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(centerSeed)
+        .end((error, response) => {
+          expect(response.status).to.equal(404);
+          done();
+        });
+    });
+    it('should successfully modify a center\'s detail', (done) => {
+      const testCenter = { ...centerSeed };
+      testCenter.description = 'Brand new center here';
+      request.put(`${centerApi}/${centerSeed.id}?token=${adminUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(testCenter)
+        .end((error, response) => {
+          expect(response.status).to.equal(201);
+          done();
+        });
+    });
   });
+  describe('Delete center endpoint', () => {
+    it('Should return an error if the user is not an admin', (done) => {
+      request.delete(`${deleteCenter}/${centerSeed
+        .id}?token=${dummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(centerSeed)
+        .end((error, response) => {
+          expect(response.status).to.equal(401);
+          done();
+        });
+    });
+    it('should return an error if the center does not exist', (done) => {
+      request.delete(`${deleteCenter}/100?token=${adminUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(404);
+          done();
+        });
+    });
+    it(
+      'should successfully delete a center if the user is an admin',
+      (done) => {
+        request.delete(`${deleteCenter}/${centerSeed
+          .id}?token=${adminUser.token}`)
+          .set('Connection', 'keep alive')
+          .set('Content-Type', 'application/json')
+          .type('form')
+          .end((error, response) => {
+            expect(response.status).to.equal(200);
+            done();
+          });
+      }
+    );
+  });
+  describe('Get all centers endpoint', () => {
+    it('should fetch all centers in the application', (done) => {
+      request.get(centerApi)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(200);
+          done();
+        });
+    });
+  })
 });

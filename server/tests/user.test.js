@@ -94,6 +94,44 @@ describe('Integration tests for Authentication', () => {
         });
     });
     it(
+      'should fail to sign up a user if the email is already registered',
+      (done) => {
+        const testUser = {
+          username: 'randomuser',
+          email: 'qwertyuiop@gmail.com',
+          password: 'qwertyuiop'
+        };
+        request.post(signupAPI)
+          .set('Connection', 'keep alive')
+          .set('Content-Type', 'application/json')
+          .type('form')
+          .send(testUser)
+          .end((error, response) => {
+            expect(response.status).to.equal(409);
+            expect(response.body).to.be.an('object');
+            expect(response.body.message)
+              .to.equal('This email is already taken.');
+            done();
+          });
+      }
+    );
+    it('should fail to sign up a user of the username already exists', (done) => {
+      const testUser = {
+        username: 'piedpiper',
+        email: 'randomemail@gmail.com',
+        password: 'qwertyuiop'
+      };
+      request.post(signupAPI)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(testUser)
+        .end((error, response) => {
+          expect(response.status).to.equal(409);
+          done();
+        });
+    });
+    it(
       'should successfully create a user when all relevant data is supplied',
       (done) => {
         request.post(signupAPI)
@@ -150,6 +188,39 @@ describe('Integration tests for Authentication', () => {
           });
       }
     );
+    it(
+      'should fail if the user provides a wrong password for an email that exists',
+      (done) => {
+        const testUser = {
+          email: dummyUser.email,
+          password: dummyUser.password
+        };
+        testUser.password = 'zxcvbnmasdf';
+        request.post(signinAPI)
+          .set('Connection', 'keep alive')
+          .set('Content-Type', 'application/json')
+          .type('form')
+          .send(testUser)
+          .end((error, response) => {
+            expect(response.status).to.equal(400);
+            expect(response.body.message)
+              .to.equal('Invalid email or password.');
+            done();
+          });
+      }
+    );
+    it('should fail if the email is unregistered', (done) => {
+      const testUser = { email: 'asdfg@gmail.com', password: 'qwertyuiop' };
+      request.post(signinAPI)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(testUser)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          done();
+        });
+    });
     it('should sign-in a user that is already signed up', (done) => {
       const testUser = { email: dummyUser.email, password: dummyUser.password };
       request.post(signinAPI)

@@ -79,6 +79,47 @@ class CenterController {
         });
       });
   }
+
+  static deleteCenter(request, response) {
+    const { username } = request.userDetails;
+    Center.findById(request.params.centerId)
+      .then((center) => {
+        if (!center) {
+          return response.status(404).json({
+            message: 'Center not found.'
+          });
+        }
+        if (username !== 'adminuser') {
+          return response.status(401).json({
+            message: 'You need admin priviledges to access this resource'
+          });
+        }
+        return center.destroy().then(() => {
+          response.status(200).json({
+            message: 'Center deleted successfully',
+            deletedCenter: center
+          });
+        });
+      }).catch(() => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
+  }
+
+  static getCenters(request, response) {
+    Center.all()
+      .then((centers) => {
+        return response.status(200).json({
+          message: 'Centers fetched successfully.',
+          centerData: centers
+        });
+      }).catch(() => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
+  }
 }
 
 export default CenterController;
