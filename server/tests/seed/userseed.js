@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const adminUserID = '1';
 const dummyUserID = '3';
+const secondDummyUserId = '6';
 
 const dummyUser = {
   id: dummyUserID,
@@ -11,6 +12,17 @@ const dummyUser = {
   token: jwt.sign({
     id: dummyUserID,
     username: 'davyjones'
+  }, process.env.SECRET).toString()
+};
+
+export const secondDummyUser = {
+  id: secondDummyUserId,
+  username: 'secondDummyUser',
+  email: 'secondDummyUserEmail@gmail.com',
+  password: 'qwertyuiop',
+  token: jwt.sign({
+    id: secondDummyUserId,
+    username: 'secondDummyUser'
   }, process.env.SECRET).toString()
 };
 

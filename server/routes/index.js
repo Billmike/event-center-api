@@ -29,4 +29,9 @@ module.exports = (app) => {
     eventController.addEvent
   );
   app.get('/api/v1/events', eventController.getEvents);
+  app.put(
+    '/api/v1/event/:eventId',
+    sessionControl.isLoggedIn, sessionControl.isUser,
+    eventController.modifyEvent
+  );
 };
