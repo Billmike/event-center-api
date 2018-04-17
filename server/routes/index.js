@@ -34,4 +34,8 @@ module.exports = (app) => {
     sessionControl.isLoggedIn, sessionControl.isUser,
     eventController.modifyEvent
   );
+  app.delete(
+    '/api/v1/event/:eventId', sessionControl.isLoggedIn,
+    sessionControl.isUser, eventController.deleteEvent
+  );
 };

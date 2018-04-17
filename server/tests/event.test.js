@@ -173,4 +173,40 @@ describe('Tests for Events API', () => {
         });
     });
   });
+  describe('Delete event test', () => {
+    it('should throw an error if user is not logged in', (done) => {
+      request.delete('/api/v1/event/eventSeed.id')
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(401);
+          done();
+        });
+    });
+    it('should throw an error is no event is found', (done) => {
+      request.delete(`/api/v1/event/100?token=${secondDummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('No event found.');
+          done();
+        });
+    });
+    it('should delete an event', (done) => {
+      request.delete(`/api/v1/event/${eventSeed
+        .id}?token=${secondDummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.eventDetails).to.be.an('object');
+          done();
+        });
+    });
+  });
 });

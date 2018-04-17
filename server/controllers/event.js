@@ -93,6 +93,31 @@ class Events {
         });
       });
   }
+  static deleteEvent(request, response) {
+    Event.findById(request.params.eventId)
+      .then((event) => {
+        if (!event) {
+          return response.status(404).json({
+            message: 'No event found.'
+          });
+        }
+        if (event.organizer != request.userDetails.id) {
+          return response.status(401).json({
+            message: 'You do not have the privilege to modify this resource'
+          });
+        }
+        return event.destroy().then(() => {
+          response.status(200).json({
+            message: 'Event successfully deleted.',
+            eventDetails: event
+          });
+        });
+      }).catch(() => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
+  }
 }
 
 export default Events;
