@@ -41,6 +41,16 @@ module.exports = {
           key: 'id',
           as: 'organizer'
         }
+      },
+      venue: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        onDelete: 'cascade',
+        references: {
+          model: 'Centers',
+          key: 'id',
+          as: 'venue'
+        }
       }
     });
   },
