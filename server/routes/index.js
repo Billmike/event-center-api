@@ -1,6 +1,7 @@
 import userController from '../controllers/user';
 import centerController from '../controllers/center';
 import sessionControl from '../middleware/SessionControl';
+import eventController from '../controllers/event';
 
 module.exports = (app) => {
   app.get('/api', (request, response) =>
@@ -23,4 +24,9 @@ module.exports = (app) => {
     sessionControl.isUser, centerController.deleteCenter
   );
   app.get('/api/v1/centers', centerController.getCenters);
+  app.post(
+    '/api/v1/events', sessionControl.isLoggedIn, sessionControl.isUser,
+    eventController.addEvent
+  );
+  app.get('/api/v1/events', eventController.getEvents);
 };

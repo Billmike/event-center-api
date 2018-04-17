@@ -39,6 +39,11 @@ class CenterController {
         centerDetails: center
       });
     }).catch((error) => {
+      if (error.errors[0].message === 'name must be unique') {
+        return response.status(409).json({
+          message: 'A center with this name already exists.'
+        });
+      }
       return response.status(500).json({
         message: error.message
       });
