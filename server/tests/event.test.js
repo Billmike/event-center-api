@@ -2,12 +2,19 @@ import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../app';
 import eventSeed from './seed/eventSeed';
-import dummyUser from './seed/userseed';
+import dummyUser, { secondDummyUser } from './seed/userseed';
 
 const request = supertest(app);
 const eventApi = '/api/v1/events';
 
 describe('Tests for Events API', () => {
+  before((done) => {
+    request.post('/api/v1/users/signup')
+      .send(secondDummyUser)
+      .end(() => {
+        done();
+      });
+  });
   describe('Tests for events creation', () => {
     it('should fail to create an event if the user is not signed in', (done) => {
       request.post(eventApi)
@@ -26,7 +33,7 @@ describe('Tests for Events API', () => {
     it('should fail to create an event if no name is provided', (done) => {
       const noName = { ...eventSeed };
       noName.name = '';
-      request.post(`/api/v1/events?token=${dummyUser.token}`)
+      request.post(`/api/v1/events?token=${secondDummyUser.token}`)
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')
@@ -57,7 +64,7 @@ describe('Tests for Events API', () => {
     it('should fail to create an event if no duration is supplied', (done) => {
       const noDuration = { ...eventSeed };
       noDuration.duration = '';
-      request.post(`/api/v1/events?token=${dummyUser.token}`)
+      request.post(`/api/v1/events?token=${secondDummyUser.token}`)
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')
@@ -103,7 +110,7 @@ describe('Tests for Events API', () => {
     it(
       'should create an event successfully if all values are supplied',
       (done) => {
-        request.post(`/api/v1/events?token=${dummyUser.token}`)
+        request.post(`/api/v1/events?token=${secondDummyUser.token}`)
           .set('Connection', 'keep alive')
           .set('Content-Type', 'application/json')
           .type('form')
@@ -131,6 +138,37 @@ describe('Tests for Events API', () => {
           expect(response.status).to.equal(200);
           expect(response.body).to.be.an('object');
           expect(response.body.eventDetails).to.be.an('array');
+          done();
+        });
+    });
+  });
+  describe('Edit events test', () => {
+    it('should fail to edit an event if a user is not signed in', (done) => {
+      request.put(`/api/v1/event/${eventSeed.id}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(eventSeed)
+        .end((error, response) => {
+          expect(response.status).to.equal(401);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to
+            .equal('Please sign into your account to access this resource.');
+          done();
+        });
+    });
+    it('should edit an event successfully', (done) => {
+      request.put(`/api/v1/event/${eventSeed.id}?token=${secondDummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(eventSeed)
+        .end((error, response) => {
+          expect(response.status).to.equal(201);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message)
+            .to.equal('Event modified successfully.');
+          expect(response.body.eventDetails).to.be.an('object');
           done();
         });
     });

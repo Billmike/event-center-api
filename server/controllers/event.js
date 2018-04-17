@@ -63,6 +63,36 @@ class Events {
         });
       });
   }
+  static modifyEvent(request, response) {
+    Event.findById(request.params.eventId)
+      .then((event) => {
+        if (!event) {
+          return response.status(404).json({
+            message: 'No event found.'
+          });
+        }
+        if (event.organizer != request.userDetails.id) {
+          return response.status(401).json({
+            message: 'You do not have the privilege to modify this resource'
+          });
+        }
+        return event.update({
+          name: request.body.name || event.name,
+          image: request.body.image || event.image,
+          date: request.body.date || event.date,
+          duration: request.body.duration || event.duration
+        }).then((updatedEvent) => {
+          return response.status(201).json({
+            message: 'Event modified successfully.',
+            eventDetails: updatedEvent
+          });
+        });
+      }).catch((err) => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
+  }
 }
 
 export default Events;
