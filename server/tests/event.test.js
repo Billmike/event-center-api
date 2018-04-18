@@ -157,8 +157,25 @@ describe('Tests for Events API', () => {
           done();
         });
     });
+    it(
+      'should fail to modify an event if the user did not create it',
+      (done) => {
+        request.put(`/api/v1/event/${eventSeed.id}?token=${dummyUser.token}`)
+          .set('Connection', 'keep alive')
+          .set('Content-Type', 'application/json')
+          .type('form')
+          .send(eventSeed)
+          .end((error, response) => {
+            expect(response.status).to.equal(401);
+            expect(response.body.message)
+              .to.equal('You do not have the privilege to modify this resource');
+            done();
+          });
+      }
+    );
     it('should edit an event successfully', (done) => {
-      request.put(`/api/v1/event/${eventSeed.id}?token=${secondDummyUser.token}`)
+      request.put(`/api/v1/event/${eventSeed
+        .id}?token=${secondDummyUser.token}`)
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')

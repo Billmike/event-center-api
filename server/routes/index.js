@@ -38,4 +38,5 @@ module.exports = (app) => {
     '/api/v1/event/:eventId', sessionControl.isLoggedIn,
     sessionControl.isUser, eventController.deleteEvent
   );
+  app.get('/api/v1/centers/search', centerController.searchCenters);
 };
