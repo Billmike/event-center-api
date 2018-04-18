@@ -1,8 +1,10 @@
+import Sequelize from 'sequelize';
 import db from '../models';
 import serverError from '../errorHandler/serverError';
 import validateInput from '../validators/validateAddCenter';
 
 const { Center } = db;
+const Op = Sequelize.Op;
 
 class CenterController {
   static createCenter(request, response) {
@@ -124,6 +126,35 @@ class CenterController {
           message: serverError
         });
       });
+  }
+  static searchCenters(request, response) {
+    const { search } = request.query;
+    return Center.findAll({
+      where: {
+        [Op.or]: {
+          name: {
+            [Op.iLike]: `%${search}`
+          },
+          location: {
+            [Op.iLike]: `%${search}`
+          }
+        }
+      }
+    }).then((foundCenters) => {
+      if (foundCenters.length == 0) {
+        return response.status(200).json({
+          message: 'No center found with this name or location'
+        });
+      }
+      return response.status(200).json({
+        message: `Found ${foundCenters.length} center(s) matching ${search}.`,
+        centerDetails: foundCenters
+      });
+    }).catch(() => {
+      return response.status(500).json({
+        message: serverError
+      });
+    });
   }
 }
 

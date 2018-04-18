@@ -266,5 +266,34 @@ describe('Tests for Centers endpoint', () => {
           done();
         });
     });
-  })
+  });
+  describe('Search centers endpoint test', () => {
+    it(
+      'should return an empty array if no center is found for search',
+      (done) => {
+        request.get('/api/v1/centers/search?search=James palace')
+          .set('Connection', 'keep alive')
+          .set('Content-Type', 'application/json')
+          .type('form')
+          .end((error, response) => {
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to
+              .equal('No center found with this name or location');
+            done();
+          });
+      }
+    );
+    it('should handle a server error when one occurs', (done) => {
+      request.get('/api/v1/centers/search?search=Yaba Beach')
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.body.message).to.equal('Found 1 center(s) matching Yaba Beach.');
+          expect(response.body.centerDetails).to.be.an('array');
+          expect(response.status).to.equal(200);
+          done();
+        });
+    });
+  });
 });
