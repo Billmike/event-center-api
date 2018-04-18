@@ -7,6 +7,7 @@ module.exports = {
         username: 'adminuser',
         email: 'admin@localhost.com',
         password: 'qwertyuiop',
+        phoneNumber: '08012345678',
         createdAt: '2018-03-05 12:01:18.936+01',
         updatedAt: '2018-03-05 12:01:18.936+01'
       },
@@ -14,6 +15,7 @@ module.exports = {
         username: 'piedpiper',
         email: 'qwertyuiop@gmail.com',
         password: 'qwertyuiop',
+        phoneNumber: '08012345678',
         createdAt: '2018-03-05 12:01:18.936+01',
         updatedAt: '2018-03-05 12:01:18.936+01'
       },
@@ -21,6 +23,7 @@ module.exports = {
         username: 'sadamhussein',
         email: 'sadamhussein@gmail.com',
         password: 'qwertyuiop',
+        phoneNumber: '08012345678',
         createdAt: '2018-03-05 12:01:18.936+01',
         updatedAt: '2018-03-05 12:01:18.936+01'
       }

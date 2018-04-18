@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash';
+import { isValidNumber } from 'libphonenumber-js';
 
 const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -24,6 +25,12 @@ const validateSignup = (userData) => {
     userData.password.length <= 7
   ) {
     errors.password = 'Your password should be at least 8 characters long.';
+  }
+  if (userData.phoneNumber === undefined ||
+    userData.phoneNumber.trim() === '' ||
+    isValidNumber({ phone: userData.phoneNumber, country: 'NG' }) !== true
+  ) {
+    errors.phoneNumber = 'Please input a valid phone-number';
   }
 
   return {

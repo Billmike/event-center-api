@@ -1,8 +1,9 @@
 import db from '../models';
+import mailer from './mailer';
 import serverError from '../errorHandler/serverError';
 import validateAddEvent from '../validators/validateAddEvent';
 
-const { Event, Center } = db;
+const { Event, Center, User } = db;
 
 class Events {
   static addEvent(request, response) {
@@ -93,6 +94,7 @@ class Events {
         });
       });
   }
+
   static deleteEvent(request, response) {
     Event.findById(request.params.eventId)
       .then((event) => {
@@ -101,17 +103,31 @@ class Events {
             message: 'No event found.'
           });
         }
-        if (event.organizer != request.userDetails.id) {
+        if (event.organizer != request.userDetails.id
+          && request.userDetails.username !== 'adminuser') {
           return response.status(401).json({
             message: 'You do not have the privilege to modify this resource'
           });
         }
-        return event.destroy().then(() => {
-          response.status(200).json({
-            message: 'Event successfully deleted.',
-            eventDetails: event
+        User.findById(event.organizer)
+          .then((foundUser) => {
+            return event.destroy().then(() => {
+              const mailOptions = {
+                from: process.env.EMAIL_ADDRESS,
+                to: foundUser.dataValues.email,
+                subject: 'Your event has been cancelled'
+              };
+              response.status(200).json({
+                message: 'Event successfully deleted.',
+                eventDetails: event
+              });
+              mailer.sendMail(mailOptions, (err) => {
+                if (err) {
+                  return err;
+                }
+              });
+            });
           });
-        });
       }).catch(() => {
         return response.status(500).json({
           message: serverError
