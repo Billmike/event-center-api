@@ -255,9 +255,29 @@ describe('Tests for Centers endpoint', () => {
       }
     );
   });
-  describe('Get all centers endpoint', () => {
+  describe('Get centers endpoint', () => {
     it('should fetch all centers in the application', (done) => {
       request.get(centerApi)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(200);
+          done();
+        });
+    });
+    it('should return a 404 error if no center is found', (done) => {
+      request.get('/api/v1/center/1000')
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(404);
+          done();
+        });
+    });
+    it('should fetch a single center in the application', (done) => {
+      request.get('/api/v1/center/1')
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')

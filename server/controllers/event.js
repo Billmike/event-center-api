@@ -134,6 +134,27 @@ class Events {
         });
       });
   }
+  static getCenterEvents(request, response) {
+    Event.findAll({
+      where: {
+        venue: request.params.venueId
+      }
+    }).then((centerEvents) => {
+      if (centerEvents.length === 0) {
+        return response.status(200).json({
+          message: 'No events yet for this center.'
+        });
+      }
+      return response.status(200).json({
+        message: `${centerEvents.length} upcoming events in this center`,
+        upcomingEvents: centerEvents
+      });
+    }).catch(() => {
+      return response.status(500).json({
+        message: serverError
+      });
+    });
+  }
 }
 
 export default Events;
