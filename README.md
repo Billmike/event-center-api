@@ -11,7 +11,8 @@
 * Users can delete events they own
 * Users can get all events in the application
 * Users can get all the centers in the application
-* Users can search tje application for centers using center name or location
+* Users can search the application for centers using center name or location
+* Users can fetch a single center to view all upcoming events
 
 ### Contributing
 Receiving no contributions at this time.

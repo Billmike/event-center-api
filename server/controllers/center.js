@@ -156,6 +156,24 @@ class CenterController {
       });
     });
   }
+  static getOneCenter(request, response) {
+    Center.findById(request.params.centerId)
+      .then((foundCenter) => {
+        if (!foundCenter) {
+          return response.status(404).json({
+            message: 'No center found.'
+          });
+        }
+        return response.status(200).json({
+          message: 'Center found',
+          centerDetail: foundCenter
+        });
+      }).catch(() => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
+  }
 }
 
 export default CenterController;

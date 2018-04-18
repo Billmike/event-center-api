@@ -39,4 +39,6 @@ module.exports = (app) => {
     sessionControl.isUser, eventController.deleteEvent
   );
   app.get('/api/v1/centers/search', centerController.searchCenters);
+  app.get('/api/v1/center/:centerId', centerController.getOneCenter);
+  app.get('/api/v1/center/events/:venueId', eventController.getCenterEvents);
 };

@@ -141,6 +141,16 @@ describe('Tests for Events API', () => {
           done();
         });
     });
+    it('should fetch the events for a single center', (done) => {
+      request.get('/api/v1/center/events/1')
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(200);
+          done();
+        });
+    });
   });
   describe('Edit events test', () => {
     it('should fail to edit an event if a user is not signed in', (done) => {
@@ -174,8 +184,7 @@ describe('Tests for Events API', () => {
       }
     );
     it('should edit an event successfully', (done) => {
-      request.put(`/api/v1/event/${eventSeed
-        .id}?token=${secondDummyUser.token}`)
+      request.put(`/api/v1/event/4?token=${secondDummyUser.token}`)
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')
@@ -213,8 +222,7 @@ describe('Tests for Events API', () => {
         });
     });
     it('should delete an event', (done) => {
-      request.delete(`/api/v1/event/${eventSeed
-        .id}?token=${secondDummyUser.token}`)
+      request.delete(`/api/v1/event/4?token=${secondDummyUser.token}`)
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')
