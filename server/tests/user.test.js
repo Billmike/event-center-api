@@ -99,7 +99,8 @@ describe('Integration tests for Authentication', () => {
         const testUser = {
           username: 'randomuser',
           email: 'qwertyuiop@gmail.com',
-          password: 'qwertyuiop'
+          password: 'qwertyuiop',
+          phoneNumber: '08012345678'
         };
         request.post(signupAPI)
           .set('Connection', 'keep alive')
@@ -119,7 +120,8 @@ describe('Integration tests for Authentication', () => {
       const testUser = {
         username: 'piedpiper',
         email: 'randomemail@gmail.com',
-        password: 'qwertyuiop'
+        password: 'qwertyuiop',
+        phoneNumber: '08012345678'
       };
       request.post(signupAPI)
         .set('Connection', 'keep alive')
@@ -152,7 +154,8 @@ describe('Integration tests for Authentication', () => {
       (done) => {
         const testUser = {
           email: dummyUser.email,
-          password: dummyUser.password
+          password: dummyUser.password,
+          phoneNumber: dummyUser.phoneNumber
         };
         delete testUser.email;
         request.post(signinAPI)
@@ -174,7 +177,8 @@ describe('Integration tests for Authentication', () => {
       (done) => {
         const testUser = {
           email: dummyUser.email,
-          password: dummyUser.password
+          password: dummyUser.password,
+          phoneNumber: dummyUser.phoneNumber
         };
         delete testUser.password;
         request.post(signinAPI)
@@ -193,7 +197,8 @@ describe('Integration tests for Authentication', () => {
       (done) => {
         const testUser = {
           email: dummyUser.email,
-          password: dummyUser.password
+          password: dummyUser.password,
+          phoneNumber: dummyUser.phoneNumber
         };
         testUser.password = 'zxcvbnmasdf';
         request.post(signinAPI)

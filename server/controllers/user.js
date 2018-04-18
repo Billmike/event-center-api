@@ -27,13 +27,15 @@ class Users {
         User.create({
           username: request.body.username,
           email: request.body.email,
-          password: hashedPassword
+          password: hashedPassword,
+          phoneNumber: request.body.phoneNumber
         })
           .then((newUser) => {
             const userToken = jwt.sign(
               {
                 id: newUser.id,
-                username: newUser.username
+                username: newUser.username,
+                email: newUser.email
               },
               process.env.SECRET,
               { expiresIn: '10h' }
@@ -46,6 +48,7 @@ class Users {
             });
           })
           .catch((error) => {
+            console.log(error);
             if (error.errors[0].message === 'username must be unique') {
               return response.status(409).json({
                 message: 'This username is already taken'
@@ -84,7 +87,8 @@ class Users {
       const userToken = jwt.sign(
         {
           id: user.id,
-          username: user.username
+          username: user.username,
+          email: user.email
         },
         process.env.SECRET,
         { expiresIn: '10h' }

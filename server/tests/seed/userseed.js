@@ -8,6 +8,7 @@ const dummyUser = {
   id: dummyUserID,
   username: 'davyjones',
   email: 'davyjones@gmail.com',
+  phoneNumber: '08012345678',
   password: 'qwertyuiop',
   token: jwt.sign({
     id: dummyUserID,
@@ -20,6 +21,7 @@ export const secondDummyUser = {
   username: 'secondDummyUser',
   email: 'secondDummyUserEmail@gmail.com',
   password: 'qwertyuiop',
+  phoneNumber: '08012345678',
   token: jwt.sign({
     id: secondDummyUserId,
     username: 'secondDummyUser'
@@ -32,6 +34,7 @@ export const adminUser = {
   username: 'adminuser',
   email: 'admin@localhost.com',
   password: 'qwertyuiop',
+  phoneNumber: '08012345678',
   token: jwt.sign({
     id: adminUserID,
     username: 'adminuser'
