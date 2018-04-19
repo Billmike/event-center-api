@@ -8,9 +8,6 @@ const validateAddEvent = (eventData) => {
   if (eventData.date.trim() === '' || eventData.date === undefined) {
     errors.date = 'Please input a date for your event';
   }
-  if (eventData.duration.trim() === '' || eventData.duration === undefined) {
-    errors.duration = 'Please enter a duration for your event';
-  }
 
   return {
     errors,

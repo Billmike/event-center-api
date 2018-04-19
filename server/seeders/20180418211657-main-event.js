@@ -15,7 +15,9 @@ module.exports = {
     return queryInterface.bulkInsert('Events', [
       {
         name: 'Biker sports event',
-        duration: 2,
+        startTime: '19:00:00',
+        endTime: '20:00:00',
+        duration: '1hour(s), 00minutes',
         date: '2018-03-05 12:01:18.936+01',
         organizer: 1,
         venue: 1,
@@ -24,7 +26,9 @@ module.exports = {
       },
       {
         name: 'NBA Playoffs',
-        duration: 2,
+        startTime: '17:00:00',
+        endTime: '18:00:00',
+        duration: '1hour(s), 00minutes',
         date: '2018-03-05 12:01:18.936+01',
         organizer: 1,
         venue: 1,
@@ -33,7 +37,9 @@ module.exports = {
       },
       {
         name: 'Paralympics',
-        duration: 2,
+        startTime: '10:00:00',
+        endTime: '15:00:00',
+        duration: '5hour(s), 00minutes',
         date: '2018-03-05 12:01:18.936+01',
         organizer: 1,
         venue: 1,
