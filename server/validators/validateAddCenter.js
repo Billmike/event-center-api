@@ -1,5 +1,11 @@
 import { isEmpty } from 'lodash';
 
+/**
+ * Validates the incoming request
+ *
+ * @param {Object} centerData - The incoming request
+ * data for the creation of a center
+ */
 const validateAddCenter = (centerData) => {
   const errors = {};
   if (centerData.name === undefined || centerData.name.trim() === '') {

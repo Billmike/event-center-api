@@ -6,7 +6,18 @@ import validateSignin from '../validators/validateSignin';
 
 const { User } = db;
 
+/**
+ * Controller class for handling user actions
+ */
 class Users {
+  /**
+   * Create a new User
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The user object
+   */
   static userSignup(request, response) {
     const { errors, isValid } = validateSignup(request.body);
     if (!isValid) {
@@ -64,6 +75,14 @@ class Users {
       });
   }
 
+  /**
+   * Sign-in a user
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The user object
+   */
   static userSignin(request, response) {
     const { errors, isValid } = validateSignin(request.body);
     if (!isValid) {
