@@ -57,7 +57,15 @@
           "err"
         ]
       }
-    ]
+    ],
+    "require-jsdoc": ["error", {
+      "require": {
+        "ClassDeclaration": true,
+        "FunctionDeclaration": true,
+        "ArrowFunctionExpression": true,
+        "MethodDefinition": true
+      }
+    }]
   },
   "globals": {
     "localStorage": true,

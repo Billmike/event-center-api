@@ -1,5 +1,11 @@
 import { isEmpty } from 'lodash';
 
+/**
+ * Validates the incoming request
+ *
+ * @param {Object} eventData - The incoming request
+ * data for the creation of an event
+ */
 const validateAddEvent = (eventData) => {
   const errors = {};
   if (eventData.name.trim() === '' || eventData.name === undefined) {

@@ -8,7 +8,18 @@ import validateAddEvent from '../validators/validateAddEvent';
 
 const { Event, Center, User } = db;
 
+/**
+ * A class controller for handling events actions
+ */
 class Events {
+  /**
+   * Adds an event to the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The event object
+   */
   static addEvent(request, response) {
     const { errors, valid } = validateAddEvent(request.body);
     if (!valid) {
@@ -89,6 +100,14 @@ class Events {
     });
   }
 
+  /**
+   * Fetch all the events in the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The event object
+   */
   static getEvents(request, response) {
     return Event.findAndCountAll()
       .then((allEvents) => {
@@ -107,6 +126,15 @@ class Events {
         });
       });
   }
+
+  /**
+   * Edit the event in the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The event object
+   */
   static modifyEvent(request, response) {
     Event.findById(request.params.eventId)
       .then((event) => {
@@ -138,6 +166,14 @@ class Events {
       });
   }
 
+  /**
+   * Delete the event in the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The event object
+   */
   static deleteEvent(request, response) {
     Event.findById(request.params.eventId)
       .then((event) => {
@@ -177,6 +213,15 @@ class Events {
         });
       });
   }
+
+  /**
+   * Fetch events for a particular center in the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The event object
+   */
   static getCenterEvents(request, response) {
     Event.findAll({
       where: {

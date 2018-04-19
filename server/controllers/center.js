@@ -4,9 +4,20 @@ import serverError from '../errorHandler/serverError';
 import validateInput from '../validators/validateAddCenter';
 
 const { Center } = db;
-const Op = Sequelize.Op;
+const { Op } = Sequelize;
 
+/**
+ * A controller class for handling center actions
+ */
 class CenterController {
+  /**
+   * Create a new center
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The center object
+   */
   static createCenter(request, response) {
     const { errors, isValid } = validateInput(request.body);
 
@@ -52,6 +63,14 @@ class CenterController {
     });
   }
 
+  /**
+   * Edit a center in the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The center object
+   */
   static editCenter(request, response) {
     return Center.findById(request.params.centerId)
       .then((center) => {
@@ -87,6 +106,14 @@ class CenterController {
       });
   }
 
+  /**
+   * Delete a center
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The center object
+   */
   static deleteCenter(request, response) {
     const { username } = request.userDetails;
     Center.findById(request.params.centerId)
@@ -114,6 +141,14 @@ class CenterController {
       });
   }
 
+  /**
+   * Fetch all centers
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The center object
+   */
   static getCenters(request, response) {
     Center.all()
       .then((centers) => {
@@ -127,6 +162,15 @@ class CenterController {
         });
       });
   }
+
+  /**
+   * Search through the centers
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The center object
+   */
   static searchCenters(request, response) {
     const { search } = request.query;
     return Center.findAll({
@@ -156,6 +200,15 @@ class CenterController {
       });
     });
   }
+
+  /**
+   * Fetch one center from the database
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The center object
+   */
   static getOneCenter(request, response) {
     Center.findById(request.params.centerId)
       .then((foundCenter) => {

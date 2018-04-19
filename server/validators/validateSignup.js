@@ -3,6 +3,12 @@ import { isValidNumber } from 'libphonenumber-js';
 
 const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
+/**
+ * Validates the incoming request
+ *
+ * @param {Object} userData - The incoming request
+ * data for the creation of a user
+ */
 const validateSignup = (userData) => {
   const errors = {};
   if (
