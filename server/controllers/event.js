@@ -1,3 +1,6 @@
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+import timeDifference from 'timediff';
 import db from '../models';
 import mailer from './mailer';
 import serverError from '../errorHandler/serverError';
@@ -21,23 +24,62 @@ class Events {
           message: 'No center found with this name.'
         });
       }
-      Event.create({
-        name: request.body.name,
-        image: request.body.image,
-        date: request.body.date,
-        duration: request.body.duration,
-        organizer: request.userDetails.id,
-        venue: foundCenter.dataValues.id
-      }).then((event) => {
-        return response.status(201).json({
-          message: 'Event created successfully.',
-          eventDetails: {
-            name: event.name,
-            image: event.image,
-            date: event.date,
-            duration: event.duration,
-            venue: foundCenter.dataValues.name
+      const duration = timeDifference(
+        request.body.startTime,
+        request.body.endTime
+      );
+
+      const convertStartTime = new Date(request.body.startTime)
+        .toLocaleTimeString('en-US', { hour12: false });
+      const convertEndTime = new Date(request.body.endTime)
+        .toLocaleTimeString('en-US', { hour12: false });
+
+      const eventDuration =
+      `${duration.hours}hour(s), ${duration.minutes}minutes`;
+
+      return Event.findAll({
+        where: {
+          date: request.body.date,
+          venue: foundCenter.dataValues.id
+        }
+      }).then((foundEvent) => {
+        for (let index = 0; index < foundEvent.length; index += 1) {
+          const event = foundEvent[index];
+          if ((convertStartTime >= event.dataValues.startTime
+            && convertStartTime <= event.dataValues.endTime) ||
+        (convertEndTime <= event.dataValues.endTime
+          && convertEndTime >= event.dataValues.startTime)) {
+            return response.status(409).json({
+              message:
+              `Sorry, you cannot book an event at this
+ time because there will be an event
+ holding between ${event.dataValues.startTime} and ${event.dataValues.endTime}.`
+            });
           }
+        }
+
+        return Event.create({
+          name: request.body.name,
+          image: request.body.image,
+          date: request.body.date,
+          startTime: request.body.startTime,
+          endTime: request.body.endTime,
+          duration: eventDuration,
+          organizer: request.userDetails.id,
+          venue: foundCenter.dataValues.id
+        }).then((event) => {
+          return response.status(201).json({
+            message: 'Event created successfully.',
+            eventDetails: {
+              name: event.name,
+              image: event.image,
+              date: event.date,
+              startTime: event.startTime,
+              endTime: event.endTime,
+              duration: event.duration,
+              venue: foundCenter.dataValues.name
+            }
+          });
         });
       });
     }).catch((err) => {
@@ -46,6 +88,7 @@ class Events {
       });
     });
   }
+
   static getEvents(request, response) {
     return Event.findAndCountAll()
       .then((allEvents) => {

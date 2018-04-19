@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
+    startTime: {
+      type: DataTypes.TIME
+    },
+    endTime: {
+      type: DataTypes.TIME
+    }
   });
   Event.associate = (models) => {
     Event.belongsTo(models.Center, {

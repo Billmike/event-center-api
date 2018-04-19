@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../app';
-import eventSeed from './seed/eventSeed';
+import eventSeed, { secondEvent } from './seed/eventSeed';
 import dummyUser, { secondDummyUser } from './seed/userseed';
 
 const request = supertest(app);
@@ -61,22 +61,6 @@ describe('Tests for Events API', () => {
           done();
         });
     });
-    it('should fail to create an event if no duration is supplied', (done) => {
-      const noDuration = { ...eventSeed };
-      noDuration.duration = '';
-      request.post(`/api/v1/events?token=${secondDummyUser.token}`)
-        .set('Connection', 'keep alive')
-        .set('Content-Type', 'application/json')
-        .type('form')
-        .send(noDuration)
-        .end((error, response) => {
-          expect(response.body).to.be.an('object');
-          expect(response.body.duration).to
-            .equal('Please enter a duration for your event');
-          expect(response.status).to.equal(400);
-          done();
-        });
-    });
     it(
       'should fail to create an event if the center does not exist',
       (done) => {
@@ -127,6 +111,22 @@ describe('Tests for Events API', () => {
           });
       }
     );
+    it('should fail to create an event if the time slot is already taken', (done) => {
+      request.post(`/api/v1/events?token=${secondDummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(secondEvent)
+        .end((error, response) => {
+          expect(response.status).to.equal(409);
+          expect(response.body.message).to.equal(
+            `Sorry, you cannot book an event at this
+ time because there will be an event
+ holding between 05:00:00 and 07:00:00.`
+          );
+          done();
+        });
+    });
   });
   describe('Get all events test', () => {
     it('should fetch all the events in the application', (done) => {
