@@ -194,6 +194,43 @@ class Users {
       });
     });
   }
+
+  /**
+   * Modify user details
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The user object
+   */
+  static modifyUserDetails(request, response) {
+    User.findById(request.userDetails.id)
+      .then((userDetail) => {
+        if (!userDetail) {
+          return response.status(400).json({
+            message: 'User not found.'
+          });
+        }
+        return userDetail.update({
+          username: request.body.username || userDetail.username,
+          email: request.body.email || userDetail.email,
+          phoneNumber: request.body.phoneNumber || userDetail.phoneNumber
+        }).then((updatedProfile) => {
+          return response.status(201).json({
+            message: 'Profile updated successfully',
+            userDetails: {
+              username: updatedProfile.username,
+              email: updatedProfile.email,
+              phoneNumber: updatedProfile.phoneNumber
+            }
+          });
+        });
+      }).catch(() => {
+        return response.status(500).json({
+          message: serverError
+        });
+      });
+  }
 }
 
 export default Users;

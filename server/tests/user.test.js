@@ -293,6 +293,33 @@ describe('Integration tests for Authentication', () => {
           done();
         });
     });
+    it(
+      'should return an error if the user to be edited is not found',
+      (done) => {
+        request.put(`/api/v1/user/edit?token=${nonExistentUser.token}`)
+          .set('Connection', 'keep alive')
+          .set('Content-Type', 'application/json')
+          .type('form')
+          .send(nonExistentUser)
+          .end((error, response) => {
+            expect(response.status).to.equal(400);
+            done();
+          });
+      }
+    );
+    it('should modify the details of a signed in user', (done) => {
+      const testUser = { ...dummyUser };
+      testUser.phoneNumber = '09089898989';
+      request.put(`/api/v1/user/edit?token=${dummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(testUser)
+        .end((error, response) => {
+          expect(response.status).to.equal(201);
+          done();
+        });
+    });
     it('should update the password of a signed in user', (done) => {
       const testUser = {
         currentPassword: dummyUser.password,
