@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'organizer',
       as: 'events'
     });
+
+    models.User.hasMany(models.Rating, {
+      foreignKey: 'userId',
+      as: 'userId'
+    });
   };
 
   return User;

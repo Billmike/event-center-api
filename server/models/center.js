@@ -48,6 +48,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'venue',
       as: 'events'
     });
+
+    models.Center.hasMany(models.Rating, {
+      foreignKey: 'centerId',
+      as: 'centerId'
+    });
   };
   return Center;
 };
