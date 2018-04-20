@@ -1,7 +1,8 @@
-import userController from '../controllers/user';
-import centerController from '../controllers/center';
-import sessionControl from '../middleware/SessionControl';
 import eventController from '../controllers/event';
+import centerController from '../controllers/center';
+import ratingController from '../controllers/rating';
+import sessionControl from '../middleware/SessionControl';
+import userController from '../controllers/user';
 
 module.exports = (app) => {
   app.get('/api', (request, response) =>
@@ -54,5 +55,10 @@ module.exports = (app) => {
     '/api/v1/user/edit',
     sessionControl.isLoggedIn, sessionControl.isUser,
     userController.modifyUserDetails
+  );
+  app.post(
+    '/api/v1/center/rating/:centerId',
+    sessionControl.isLoggedIn, sessionControl.isUser,
+    ratingController.rateCenter
   );
 };
