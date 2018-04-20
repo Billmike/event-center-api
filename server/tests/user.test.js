@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../app';
-import dummyUser, { nonExistentUser } from './seed/userseed';
+import dummyUser, { nonExistentUser, adminUser } from './seed/userseed';
 
 const request = supertest(app);
 const signupAPI = '/api/v1/users/signup';
@@ -240,6 +240,30 @@ describe('Integration tests for Authentication', () => {
           expect(response.body.email).to.equal('davyjones@gmail.com');
           expect(response.body.username).to.equal('davyjones');
           expect(response.body.token).to.be.a('string');
+          done();
+        });
+    });
+  });
+  describe('Get user events test', () => {
+    it('should return an empty array of a user has no events', (done) => {
+      request.get(`/api/v1/user/events?token=${dummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(200);
+          done();
+        });
+    });
+    it('should return the events of a user', (done) => {
+      request.get(`/api/v1/user/events?token=${adminUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .end((error, response) => {
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to
+            .equal('You currently have 3 event(s).');
           done();
         });
     });
