@@ -5,7 +5,7 @@ import validateSignup from '../validators/validateSignup';
 import validateSignin from '../validators/validateSignin';
 import serverError from '../errorHandler/serverError';
 
-const { User } = db;
+const { User, Center, Event } = db;
 
 /**
  * Controller class for handling user actions
@@ -163,6 +163,36 @@ class Users {
           error: serverError
         });
       });
+  }
+
+  /**
+   * Get user events
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The user events
+   */
+  static getUserEvents(request, response) {
+    Event.findAll({
+      where: {
+        organizer: request.userDetails.id
+      }
+    }).then((userEvents) => {
+      if (userEvents.length == 0) {
+        return response.status(200).json({
+          message: 'You currently have no events created.'
+        });
+      }
+      return response.status(200).json({
+        message: `You currently have ${userEvents.length} event(s).`,
+        eventDetails: userEvents
+      });
+    }).catch(() => {
+      return response.status(500).json({
+        message: serverError
+      });
+    });
   }
 }
 

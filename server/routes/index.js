@@ -45,4 +45,9 @@ module.exports = (app) => {
     '/api/v1/user/profile', sessionControl.isLoggedIn,
     sessionControl.isUser, userController.editPassword
   );
+  app.get(
+    '/api/v1/user/events',
+    sessionControl.isLoggedIn, sessionControl.isUser,
+    userController.getUserEvents
+  );
 };
