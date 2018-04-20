@@ -148,15 +148,71 @@ class Events {
             message: 'You do not have the privilege to modify this resource'
           });
         }
-        return event.update({
-          name: request.body.name || event.name,
-          image: request.body.image || event.image,
-          date: request.body.date || event.date,
-          duration: request.body.duration || event.duration
-        }).then((updatedEvent) => {
-          return response.status(201).json({
-            message: 'Event modified successfully.',
-            eventDetails: updatedEvent
+        const duration = timeDifference(
+          request.body.startTime,
+          request.body.endTime
+        );
+        const eventDuration =
+      `${duration.hours}hour(s), ${duration.minutes}minutes`;
+        const convertStartTime = new Date(request.body.startTime)
+          .toLocaleTimeString('en-US', { hour12: false });
+        const convertEndTime = new Date(request.body.endTime)
+          .toLocaleTimeString('en-US', { hour12: false });
+
+        Center.findOne({
+          where: {
+            name: request.body.venue
+          }
+        }).then((foundCenter) => {
+          if (!foundCenter) {
+            return response.status(400).json({
+              message: 'Center not found'
+            });
+          }
+
+          Event.findAll({
+            where: {
+              date: request.body.date,
+              venue: foundCenter.dataValues.id
+            }
+          }).then((foundEvent) => {
+            for (let index = 0; index < foundEvent.length; index += 1) {
+              const event = foundEvent[index];
+              if ((convertStartTime >= event.startTime
+                && convertStartTime <= event.endTime) ||
+            (convertEndTime <= event.endTime
+              && convertEndTime >= event.startTime)) {
+                return response.status(409).json({
+                  message:
+                  `Sorry, you cannot book an event at this
+ time because there will be an event
+ holding between ${event.dataValues.startTime} and ${event.dataValues.endTime}.`
+                });
+              }
+            }
+            return event.update({
+              name: request.body.name || event.name,
+              image: request.body.image || event.image,
+              date: request.body.date || event.date,
+              duration: eventDuration || event.duration,
+              startTime: request.body.startTime || event.startTime,
+              endTime: request.body.endTime || event.endTime,
+              venue: foundCenter.dataValues.id || event.venue
+            }).then((updatedEvent) => {
+              return response.status(201).json({
+                message: 'Event modified successfully.',
+                eventDetails: {
+                  name: updatedEvent.name,
+                  image: updatedEvent.image,
+                  date: updatedEvent.date,
+                  duration: updatedEvent.duration,
+                  startTime: updatedEvent.startTime,
+                  endTime: updatedEvent.endTime,
+                  venue: foundCenter.dataValues.name,
+                  organizer: updatedEvent.organizer
+                }
+              });
+            });
           });
         });
       }).catch((err) => {

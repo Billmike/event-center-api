@@ -184,11 +184,14 @@ describe('Tests for Events API', () => {
       }
     );
     it('should edit an event successfully', (done) => {
+      const testEvent = { ...eventSeed };
+      testEvent.startTime = '2018-04-19 13:00:00 +01:00';
+      testEvent.endTime = '2018-04-19 15:00:00 +01:00';
       request.put(`/api/v1/event/4?token=${secondDummyUser.token}`)
         .set('Connection', 'keep alive')
         .set('Content-Type', 'application/json')
         .type('form')
-        .send(eventSeed)
+        .send(testEvent)
         .end((error, response) => {
           expect(response.status).to.equal(201);
           expect(response.body).to.be.an('object');
