@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../app';
-import dummyUser from './seed/userseed';
+import dummyUser, { nonExistentUser } from './seed/userseed';
 
 const request = supertest(app);
 const signupAPI = '/api/v1/users/signup';
@@ -240,6 +240,49 @@ describe('Integration tests for Authentication', () => {
           expect(response.body.email).to.equal('davyjones@gmail.com');
           expect(response.body.username).to.equal('davyjones');
           expect(response.body.token).to.be.a('string');
+          done();
+        });
+    });
+  });
+  describe('User profile test', () => {
+    it('should return an error if the user is not found', (done) => {
+      request.put(`/api/v1/user/profile?token=${nonExistentUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(nonExistentUser)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          done();
+        });
+    });
+    it('should fail to update a user\'s password if they provide an incorrect current password', (done) => {
+      const testUser = { currentPassword: 'somethingelse', newPassword: 'newPasswordMan' };
+      request.put(`/api/v1/user/profile?token=${dummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(testUser)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Incorrect password.');
+          done();
+        });
+    });
+    it('should update the password of a signed in user', (done) => {
+      const testUser = {
+        currentPassword: dummyUser.password,
+        newPassword: 'newPasswordhere'
+      };
+      request.put(`/api/v1/user/profile?token=${dummyUser.token}`)
+        .set('Connection', 'keep alive')
+        .set('Content-Type', 'application/json')
+        .type('form')
+        .send(testUser)
+        .end((error, response) => {
+          expect(response.status).to.equal(201);
+          expect(response.body.message).to
+            .equal('Password updated successfully.');
           done();
         });
     });

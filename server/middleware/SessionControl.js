@@ -4,7 +4,17 @@ import serverError from '../errorHandler/serverError';
 
 const { User } = db;
 
+/**
+ * Controls the user session
+ */
 class SessionControl {
+  /**
+   * Checks if a user is logged in
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   * @param {function} next - Callback function
+   */
   static isLoggedIn(request, response, next) {
     request.token = request.headers['x-access-token']
     || request.query.token || request.headers.token;
@@ -16,6 +26,14 @@ class SessionControl {
     next();
   }
 
+  /**
+   * Verifies the identity of a user
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   * @param {function} next - Callback function
+   *
+   */
   static isUser(request, response, next) {
     let verifyToken;
     request.userDetails = {};

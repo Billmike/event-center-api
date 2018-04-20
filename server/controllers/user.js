@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import db from '../models';
 import validateSignup from '../validators/validateSignup';
 import validateSignin from '../validators/validateSignin';
+import serverError from '../errorHandler/serverError';
 
 const { User } = db;
 
@@ -69,8 +70,7 @@ class Users {
       })
       .catch((error) => {
         return response.status(500).json({
-          message:
-            'Something went wrong! We are currently working on resolving this issue.'
+          message: serverError
         });
       });
   }
@@ -120,9 +120,49 @@ class Users {
       });
     }).catch(() => {
       return response.status(500).json({
-        message: 'Something went wrong! We are currently working on resolving this issue.'
+        message: serverError
       });
     });
+  }
+
+  /**
+   * Update a user password
+   *
+   * @param {object} request - The request object
+   * @param {object} response - The response object
+   *
+   * @returns {object} The user object
+   */
+  static editPassword(request, response) {
+    User.findById(request.userDetails.id)
+      .then((userDetail) => {
+        if (!userDetail) {
+          return response.status(400).json({
+            message: 'User not found'
+          });
+        }
+        const unhashedPassword = bcrypt
+          .compareSync(request.body.currentPassword, userDetail.password);
+
+        if (!unhashedPassword) {
+          return response.status(400).json({
+            message: 'Incorrect password.'
+          });
+        }
+        const hashedUpdatedPassword = bcrypt
+          .hashSync(request.body.newPassword, 10);
+        return userDetail.update({
+          password: hashedUpdatedPassword
+        }).then((updatedUser) => {
+          return response.status(201).json({
+            message: 'Password updated successfully.',
+          });
+        });
+      }).catch(() => {
+        return response.status(500).json({
+          error: serverError
+        });
+      });
   }
 }
 
