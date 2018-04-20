@@ -50,4 +50,9 @@ module.exports = (app) => {
     sessionControl.isLoggedIn, sessionControl.isUser,
     userController.getUserEvents
   );
+  app.put(
+    '/api/v1/user/edit',
+    sessionControl.isLoggedIn, sessionControl.isUser,
+    userController.modifyUserDetails
+  );
 };
