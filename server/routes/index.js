@@ -41,4 +41,8 @@ module.exports = (app) => {
   app.get('/api/v1/centers/search', centerController.searchCenters);
   app.get('/api/v1/center/:centerId', centerController.getOneCenter);
   app.get('/api/v1/center/events/:venueId', eventController.getCenterEvents);
+  app.put(
+    '/api/v1/user/profile', sessionControl.isLoggedIn,
+    sessionControl.isUser, userController.editPassword
+  );
 };
